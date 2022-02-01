@@ -14,7 +14,12 @@ import {
     orderBy,
     serverTimestamp,
 } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signOut,
+    signInWithEmailAndPassword,
+} from "firebase/auth";
 
 var booksData = [];
 
@@ -124,7 +129,33 @@ signupForm.addEventListener("submit", (e) => {
             signupForm.reset();
         })
         .catch((err) => {
-            console.log(err);
+            console.log(err.message);
+        });
+});
+
+// logging in and out
+const logoutButton = document.querySelector(".logout");
+logoutButton.addEventListener("click", () => {
+    signOut(auth)
+        .then(() => {
+            console.log("Signout");
+        })
+        .catch((err) => {
+            console.log(err.message);
+        });
+});
+
+const loginForm = document.querySelector(".login");
+loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    signInWithEmailAndPassword(auth, loginForm.email.value, loginForm.password.value)
+        .then((cred) => {
+            console.log("User logged in ", cred.user);
+            loginForm.reset();
+        })
+        .catch((err) => {
+            console.log(err.message);
         });
 });
 
