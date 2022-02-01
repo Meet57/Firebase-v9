@@ -1,6 +1,6 @@
 // v8: import firebase from 'firebase/app'
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, addDoc, getDoc, deleteDoc, doc, query, where, orderBy, serverTimestamp } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, addDoc, getDoc, updateDoc, deleteDoc, doc, query, where, orderBy, serverTimestamp } from "firebase/firestore";
 
 var booksData = [];
 
@@ -75,14 +75,28 @@ deleteBookForm.addEventListener("submit", (e) => {
 });
 
 //get a single document
-const docRef = doc(db, "books", "HOiBLiq1th8pDZx9hb7G");
+// const docRef = doc(db, "books", "HOiBLiq1th8pDZx9hb7G");
 // getDoc(docRef).then((doc) => {
 //     console.log(doc.data(), doc.id);
 // });
 
+// const docRef = doc(db, "books", "HOiBLiq1th8pDZx9hb7G");
 // Get real time data of document
-onSnapshot(docRef, (doc) => {
-    console.log(doc.data(), doc.id);
+// onSnapshot(docRef, (doc) => {
+//     console.log(doc.data(), doc.id);
+// });
+
+// updating a document
+const updateForm = document.querySelector(".update");
+updateForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const docRef = doc(db, "books", updateForm.id.value);
+    updateDoc(docRef, {
+        title: updateForm.title.value,
+    }).then(() => {
+        updateForm.reset();
+    });
 });
 
 //Html modifer
