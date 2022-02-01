@@ -1,6 +1,6 @@
 // v8: import firebase from 'firebase/app'
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc, query, where, orderBy, serverTimestamp } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, addDoc, getDoc, deleteDoc, doc, query, where, orderBy, serverTimestamp } from "firebase/firestore";
 
 var booksData = [];
 
@@ -74,6 +74,18 @@ deleteBookForm.addEventListener("submit", (e) => {
     });
 });
 
+//get a single document
+const docRef = doc(db, "books", "HOiBLiq1th8pDZx9hb7G");
+// getDoc(docRef).then((doc) => {
+//     console.log(doc.data(), doc.id);
+// });
+
+// Get real time data of document
+onSnapshot(docRef, (doc) => {
+    console.log(doc.data(), doc.id);
+});
+
+//Html modifer
 const listAdder = () => {
     var ul = document.getElementById("list");
     ul.innerHTML = "";
