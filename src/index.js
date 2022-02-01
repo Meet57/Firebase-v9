@@ -1,6 +1,20 @@
 // v8: import firebase from 'firebase/app'
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, addDoc, getDoc, updateDoc, deleteDoc, doc, query, where, orderBy, serverTimestamp } from "firebase/firestore";
+import {
+    getFirestore,
+    collection,
+    onSnapshot,
+    addDoc,
+    getDoc,
+    updateDoc,
+    deleteDoc,
+    doc,
+    query,
+    where,
+    orderBy,
+    serverTimestamp,
+} from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 var booksData = [];
 
@@ -19,6 +33,7 @@ initializeApp(firebaseConfig);
 
 //init services
 const db = getFirestore();
+const auth = getAuth();
 
 //collection ref
 const colRef = collection(db, "books");
@@ -97,6 +112,20 @@ updateForm.addEventListener("submit", (e) => {
     }).then(() => {
         updateForm.reset();
     });
+});
+
+// signing users up
+const signupForm = document.querySelector(".signup");
+signupForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    createUserWithEmailAndPassword(auth, signupForm.email.value, signupForm.password.value)
+        .then((cred) => {
+            console.log(cred.user, cred);
+            signupForm.reset();
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 });
 
 //Html modifer
