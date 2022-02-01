@@ -1,6 +1,8 @@
 // v8: import firebase from 'firebase/app'
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc, query, where } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc, query, where, orderBy, serverTimestamp } from "firebase/firestore";
+
+var booksData = [];
 
 const firebaseConfig = {
     apiKey: "AIzaSyCWcWJF5VeONb-2yKyjiwEOfF-xkRZFiZc",
@@ -22,7 +24,8 @@ const db = getFirestore();
 const colRef = collection(db, "books");
 
 //queries
-const q = query(colRef, where("author", "==", "Patel"));
+// const q = query(colRef, where("author", "==", "Patel"), orderBy("createdAt"));
+const q = query(colRef, orderBy("createdAt"));
 
 //get collection data
 // getDocs(colRef)
@@ -43,7 +46,8 @@ onSnapshot(q, (snapshot) => {
     snapshot.docs.forEach((doc) => {
         books.push({ ...doc.data(), id: doc.id });
     });
-    console.log(books);
+    booksData = books;
+    listAdder();
 });
 
 //adding documents
@@ -53,6 +57,7 @@ addBookForm.addEventListener("submit", (e) => {
     addDoc(colRef, {
         title: addBookForm.title.value,
         author: addBookForm.author.value,
+        createdAt: serverTimestamp(),
     }).then(() => {
         addBookForm.reset();
     });
@@ -68,3 +73,16 @@ deleteBookForm.addEventListener("submit", (e) => {
         deleteBookForm.reset();
     });
 });
+
+const listAdder = () => {
+    var ul = document.getElementById("list");
+    ul.innerHTML = "";
+    // li.appendChild(document.createTextNode("Four"));
+    booksData.forEach((book) => {
+        let li = document.createElement("li");
+        li.appendChild(document.createTextNode(book.title + " - " + book.author));
+        ul.appendChild(li);
+    });
+};
+
+listAdder();
